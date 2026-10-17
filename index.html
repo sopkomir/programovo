@@ -421,6 +421,8 @@ textarea.inp{resize:vertical}
 .kitchen{grid-template-columns:minmax(0,1fr) !important}
 @container (min-width:640px){.kitchen{grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;align-items:start}}
 .glossbtn{align-self:flex-end}
+.topbtns{display:flex;flex-direction:column;align-items:stretch;gap:8px;align-self:flex-end}
+@media (max-width:700px){.topbtns{flex-direction:row;flex-wrap:wrap}}
 .term.link{border:1px dashed color-mix(in oklab, var(--accent) 60%, transparent);cursor:pointer;color:var(--ink);font:inherit;font-size:.85rem;font-weight:700}
 .term.link:hover{background:color-mix(in oklab, var(--accent) 14%, var(--surface))}
 .terms{align-items:center}
@@ -470,7 +472,8 @@ textarea.inp{resize:vertical}
       <div class="eyebrow" id="lvlabel" style="margin-bottom:6px">Tvoja úroveň</div>
       <div class="levels" role="group" aria-labelledby="lvlabel" id="levels"></div>
     </div>
-    <button class="btn glossbtn" type="button" id="glossBtn">Slovník pojmov</button>
+    <div class="topbtns"><button class="btn glossbtn" type="button" id="glossBtn">Slovník pojmov</button>
+    <button class="btn" type="button" id="fsBtn" hidden>⛶ Celá obrazovka</button></div>
   </header>
   <main id="view"></main>
   <p class="foot">Podľa ŠVP 2023 – Informatika: Technológie (Hardvér a softvér, Digitálna spoločnosť) a Programovanie. Pokrok sa ukladá len v tomto prehliadači.</p>
@@ -3236,5 +3239,22 @@ if (h0 && (h0 === "studio" || h0 === "slovnik" || DISTRICTS.some(d => d.id === h
 route();
 </script>
 
+
+<script>
+(function(){
+  var b=document.getElementById("fsBtn"), d=document, el=d.documentElement;
+  var req=el.requestFullscreen||el.webkitRequestFullscreen;
+  var en=d.fullscreenEnabled||d.webkitFullscreenEnabled;
+  if(!b||!req||!en) return;
+  b.hidden=false;
+  function cur(){return d.fullscreenElement||d.webkitFullscreenElement;}
+  function upd(){b.textContent=cur()?"✕ Zavrieť celú obrazovku":"⛶ Celá obrazovka";}
+  b.addEventListener("click",function(){
+    if(cur()){(d.exitFullscreen||d.webkitExitFullscreen).call(d);}
+    else{try{var p=req.call(el); if(p&&p.catch)p.catch(function(){window.open(location.href,"_blank");});}catch(e){window.open(location.href,"_blank");}}
+  });
+  d.addEventListener("fullscreenchange",upd); d.addEventListener("webkitfullscreenchange",upd);
+})();
+</script>
 </body>
 </html>
